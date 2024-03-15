@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabularium - Drawing Board</title>
+    <link rel="stylesheet" href="draw.css">
+</head>
+
+<body>
+    <h1 style="text-align: center;">1. Draw your mental image of the word.</h1>
+
+    <a href="writeStory.html">
+        <img src="/arrow-right.svg" alt="Icon" id="arrow-icon" width="50" height="50">
+    </a>
+
+    <canvas id="drawing-board" width="600" height="400"></canvas>
+    <div class="controls">
+        <ul>
+            <li class="red selected"></li>
+            <li class="blue"></li>
+            <li class="yellow"></li>
+        </ul>
+        <button id="revealColorSelect">New Color</button>
+        <button id="clearAllSelect">Clear All</button>
+
+        <div id="colorSelect">
+            <span id="newColor"></span>
+            <div class="sliders">
+                <p>
+                    <label for="red">Red</label>
+                    <input id="red" name="red" type="range" min=0 max=255 value=0>
+                </p>
+                <p>
+                    <label for="green">Green</label>
+                    <input id="green" name="green" type="range" min=0 max=255 value=0>
+                </p>
+                <p>
+                    <label for="blue">Blue</label>
+                    <input id="blue" name="blue" type="range" min=0 max=255 value=0>
+                </p>
+            </div>
+            <div>
+                <button id="addNewColor">Add Color</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="draw.js"></script>
+
+
+</body>
+
+</html>
