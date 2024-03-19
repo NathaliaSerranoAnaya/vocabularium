@@ -1,75 +1,70 @@
 const selectedWord = document.getElementById("word");
 const meaning = document.getElementById("meaning");
 
-const getRandomWord = async () => {
-    const url = 'https://api.api-ninjas.com/v1/randomword';
-
-    const options = {
-        method: 'GET',
-        headers: {
-            'X-Api-Key': 'sM4fq9JmfPOzM33o0f53cw==Jw1cnHcu0PK1zIiR',
-        }
-    };
-
-    try {
-        let validWordFound = false; // Flag to track if a valid word is found
-        let randomWord;
-
-        while (!validWordFound) { // Loop until a valid word is found
-            const response = await fetch(url, options);
-            const result = await response.json();
-            console.log(result);
-
-            // Assuming the response contains the random word
-            randomWord = result.word;
-
-            // Check if the word is valid by calling getWordMeaning function
-            const wordValidity = await getWordMeaning(randomWord);
-
-            if (wordValidity) {
-                validWordFound = true;
-            }
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-const getWordMeaning = async (word) => {
-    const url = `https://dictionary-by-api-ninjas.p.rapidapi.com/v1/dictionary?word=${word}`;
+function getRandomWord() {
+    const url = 'https://random-word-by-api-ninjas.p.rapidapi.com/v1/randomword?type=verb';
 
     const options = {
         method: 'GET',
         headers: {
             'X-RapidAPI-Key': 'e0423a74f0msh4031942f3352525p13811cjsn2cf151afb886',
-            'X-RapidAPI-Host': 'dictionary-by-api-ninjas.p.rapidapi.com'
+            'X-RapidAPI-Host': 'random-word-by-api-ninjas.p.rapidapi.com'
         }
     };
 
-    try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        console.log(result);
+    return fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Return the random word from the API response
+            return data.word;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
 
-        // Check if the word is valid
-        if (result.valid) {
-            // Update the word and meaning spans
-            const word = result.word;
-            const wordMeaning = result.definition; // Changed variable name to avoid conflict
-            selectedWord.innerText = word;
-            meaning.innerText = wordMeaning; // Corrected to update the meaning span
-            return true; // Return true if word is valid
-        } else {
-            return false; // Return false if word is not valid
+function getWordMeaning(word) {
+    const url = `https://dictionary-data-api.p.rapidapi.com/definition/${word}`;
+
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': 'e0423a74f0msh4031942f3352525p13811cjsn2cf151afb886',
+            'X-RapidAPI-Host': 'dictionary-data-api.p.rapidapi.com'
         }
-    } catch (error) {
-        console.error(error);
-        return false; // Return false if there's an error
-    }
+    };
+
+    return fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 }
 
 function fetchRandomWordAndUpdate() {
-    getRandomWord();
+    getRandomWord()
+        .then(word => {
+            selectedWord.innerText = word;
+            return getWordMeaning(word);
+        })
+        .then(data => {
+            // Extract the meaning from the API response
+            const meanings = data.meaning.map(item => item.values[0]); // Extracting the first meaning
+            meaning.innerText = meanings.join('\n'); // Display meanings separated by line breaks
+        })
+        .catch(error => {
+            console.error('Error fetching and displaying random word:', error);
+        });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
