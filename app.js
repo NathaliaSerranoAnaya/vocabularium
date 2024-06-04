@@ -1,7 +1,7 @@
 const selectedWord = document.getElementById("word");
 const meaning = document.getElementById("meaning");
 
-function getRandomWord() {
+async function getRandomWord() {
     const url = 'https://random-word-by-api-ninjas.p.rapidapi.com/v1/randomword?type=verb';
 
     const options = {
@@ -12,69 +12,51 @@ function getRandomWord() {
         }
     };
 
-    return fetch(url, options)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Return the random word from the API response
-            return data.word;
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data.word;
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        throw error; // Re-throw the error to handle it further in the calling function
+    }
 }
 
-function getWordMeaning(word) {
-   const url = `https://urban-dictionary7.p.rapidapi.com/v0/define?term=${word}`;
-   const options = {
-       method: 'GET',
-       headers: {
-           'x-rapidapi-key': 'e0423a74f0msh4031942f3352525p13811cjsn2cf151afb886',
-           'x-rapidapi-host': 'urban-dictionary7.p.rapidapi.com'
-       }
-   };
-}
-
-
-try {
-	const response = await fetch(url, options);
-	const result = await response.text();
-	console.log(result);
-} catch (error) {
-	console.error(error);
-}
+async function getWordMeaning(word) {
+    const url = `https://urban-dictionary7.p.rapidapi.com/v0/define?term=${word}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': 'e0423a74f0msh4031942f3352525p13811cjsn2cf151afb886',
+            'x-rapidapi-host': 'urban-dictionary7.p.rapidapi.com'
+        }
     };
 
-    return fetch(url, options)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        throw error; // Re-throw the error to handle it further in the calling function
+    }
 }
 
-function fetchRandomWordAndUpdate() {
-    getRandomWord()
-        .then(word => {
-            selectedWord.innerText = word;
-            return getWordMeaning(word);
-        })
-        .then(data => {
-            // Extract the meaning from the API response
-            const meanings = data.meaning.map(item => item.values[0]); // Extracting the first meaning
-            meaning.innerText = meanings.join('\n'); // Display meanings separated by line breaks
-        })
-        .catch(error => {
-            console.error('Error fetching and displaying random word:', error);
-        });
+async function fetchRandomWordAndUpdate() {
+    try {
+        const word = await getRandomWord();
+        selectedWord.innerText = word;
+        const data = await getWordMeaning(word);
+        const meanings = data.list.map(item => item.definition); // Extract meanings
+        meaning.innerText = meanings.join('\n'); // Display meanings separated by line breaks
+    } catch (error) {
+        console.error('Error fetching and displaying random word:', error);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -88,3 +70,4 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("No button found with id 'new-word'");
     }
 });
+
