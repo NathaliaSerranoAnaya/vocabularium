@@ -29,14 +29,16 @@ function getRandomWord() {
 }
 
 function getWordMeaning(word) {
-   const url = 'https://urban-dictionary7.p.rapidapi.com/v0/define?term=yeet';
-const options = {
-	method: 'GET',
-	headers: {
-		'x-rapidapi-key': 'e0423a74f0msh4031942f3352525p13811cjsn2cf151afb886',
-		'x-rapidapi-host': 'urban-dictionary7.p.rapidapi.com'
-	}
-};
+   const url = `https://urban-dictionary7.p.rapidapi.com/v0/define?term=${word}`;
+   const options = {
+       method: 'GET',
+       headers: {
+           'x-rapidapi-key': 'e0423a74f0msh4031942f3352525p13811cjsn2cf151afb886',
+           'x-rapidapi-host': 'urban-dictionary7.p.rapidapi.com'
+       }
+   };
+}
+
 
 try {
 	const response = await fetch(url, options);
