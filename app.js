@@ -30,7 +30,7 @@ async function getWordMeaning(word) {
     const options = {
         method: 'GET',
         headers: {
-            'x-rapidapi-key': 'e0423a74f0msh4031942f3352525p13811cjsn2cf151afb886',
+            'x-rapidapi-key': process.env.URBAN_DICTIONARY_API_KEY,
             'x-rapidapi-host': 'urban-dictionary7.p.rapidapi.com'
         }
     };
