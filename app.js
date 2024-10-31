@@ -1,3 +1,4 @@
+require('dotenv').config()
 const selectedWord = document.getElementById("word");
 const meaning = document.getElementById("meaning");
 
